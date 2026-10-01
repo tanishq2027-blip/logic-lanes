@@ -1,0 +1,173 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    color-scheme: light;
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-behavior: smooth;
+  }
+
+  /* Pearl page with three very soft Midnight washes. They give the frosted
+     surfaces something to blur; on a flat colour, glass looks like plain white. */
+  body {
+    @apply bg-pearl font-sans text-base text-noir antialiased;
+    background-image:
+      radial-gradient(56rem 38rem at 6% -8%, rgba(18, 44, 79, 0.22), transparent 62%),
+      radial-gradient(48rem 34rem at 100% 4%, rgba(18, 44, 79, 0.16), transparent 58%),
+      radial-gradient(60rem 40rem at 55% 112%, rgba(18, 44, 79, 0.2), transparent 62%);
+    background-attachment: fixed;
+  }
+
+  ::selection {
+    background: #122c4f;
+    color: #fbf9e4;
+  }
+
+  /* One clear focus ring everywhere, for keyboard and switch users. */
+  :focus-visible {
+    outline: 3px solid #122c4f;
+    outline-offset: 3px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+@layer components {
+  /* Page container: wide, with generous side gutters. */
+  .shell {
+    @apply mx-auto w-full max-w-[1440px] px-5 sm:px-8 lg:px-12;
+  }
+  .shell-wide {
+    @apply mx-auto w-full max-w-[1640px] px-5 sm:px-8 lg:px-12;
+  }
+
+  /* Glass. Used sparingly: primary cards, the nav bar, drawers and map overlays.
+     The fill is light, so a strong blur does the work of keeping text readable over whatever is behind. */
+  .glass {
+    @apply border border-white/60 bg-white/35 shadow-card ring-1 ring-noir/5 backdrop-blur-xl;
+  }
+  /* Browsers without backdrop-filter get a near-solid surface instead of see-through text. */
+  @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+    .glass {
+      @apply bg-white/90;
+    }
+  }
+
+  /* Over moving video the glass is made denser, so text contrast does not depend on what the video shows. */
+  .on-video .glass {
+    @apply bg-white/55 backdrop-blur-2xl;
+  }
+
+  /* Every interactive control is at least 48px tall. */
+  .btn {
+    @apply inline-flex min-h-touch min-w-touch select-none items-center justify-center gap-2 rounded-2xl border border-transparent px-6 py-3 text-base font-extrabold leading-tight transition-colors duration-200 disabled:cursor-not-allowed disabled:opacity-50;
+  }
+  .btn-primary {
+    @apply btn bg-midnight text-pearl shadow-card-accent hover:bg-noir;
+  }
+  .btn-secondary {
+    @apply btn border-noir/35 bg-white/35 text-noir hover:border-midnight hover:bg-midnight hover:text-pearl;
+  }
+  .btn-alert {
+    @apply btn bg-noir text-pearl hover:bg-midnight;
+  }
+
+  /* Primary surface: frosted. */
+  .card {
+    @apply glass rounded-card p-6 sm:p-8;
+  }
+  /* Secondary surface: a quiet tinted panel, no blur (blur on every box is slow and noisy). */
+  .card-flat {
+    @apply rounded-card border border-noir/10 bg-white/25 p-6;
+  }
+
+  /* Inputs keep a visible edge (3:1 against the surface) so they read as inputs. */
+  .field {
+    @apply min-h-touch w-full rounded-2xl border border-noir/45 bg-white/50 px-4 py-3 text-base font-semibold text-noir transition-colors duration-200 placeholder:font-medium placeholder:text-noir/45 hover:border-noir/70 focus:border-midnight;
+  }
+  .label {
+    @apply mb-2 block text-sm font-extrabold uppercase tracking-wide text-noir/80;
+  }
+
+  .chip {
+    @apply inline-flex items-center gap-1.5 rounded-full border border-noir/15 bg-white/30 px-3.5 py-1.5 text-sm font-bold leading-tight;
+  }
+  .chip-solid {
+    @apply chip border-midnight bg-midnight text-pearl;
+  }
+  .chip-alert {
+    @apply chip border-noir bg-noir text-pearl;
+  }
+
+  .eyebrow {
+    @apply text-sm font-extrabold uppercase tracking-widest text-midnight;
+  }
+  .muted {
+    @apply text-noir/70;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Leaflet map.
+   OpenStreetMap raster tiles cannot be re-coloured feature by feature, so the
+   tile layer is greyed and warmed until it reads as Pearl; the route (Midnight)
+   and markers (Noir) are drawn on top and keep their own colours.
+--------------------------------------------------------------------------- */
+.fleet-map.leaflet-container {
+  background: #fbf9e4;
+  font-family: inherit;
+}
+.fleet-map.leaflet-container .leaflet-tile-pane {
+  filter: grayscale(1) sepia(0.3) brightness(1.05) contrast(0.95);
+}
+.fleet-map.leaflet-container .leaflet-bar {
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.45);
+  -webkit-backdrop-filter: blur(18px);
+  backdrop-filter: blur(18px);
+  box-shadow: 0 10px 28px -12px rgba(18, 44, 79, 0.35);
+}
+.fleet-map.leaflet-container .leaflet-bar a,
+.fleet-map.leaflet-container .leaflet-bar a:hover {
+  width: 48px;
+  height: 48px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  background: transparent;
+  color: #000000;
+  font-size: 24px;
+  font-weight: 800;
+  line-height: 46px;
+}
+.fleet-map.leaflet-container .leaflet-bar a:last-child {
+  border-bottom: 0;
+}
+.fleet-map.leaflet-container .leaflet-bar a:hover {
+  background: #122c4f;
+  color: #fbf9e4;
+}
+.fleet-map.leaflet-container .leaflet-control-attribution {
+  background: rgba(255, 255, 255, 0.6);
+  color: #000000;
+  font-size: 11px;
+}
+.fleet-map.leaflet-container .leaflet-control-attribution a {
+  color: #122c4f;
+  font-weight: 700;
+}
