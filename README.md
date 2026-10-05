@@ -162,7 +162,7 @@ After running the seed script, log in with these emails and the passcode you cho
 | Client | `pooja@yamunaceramics.demo` | Yamuna Ceramics, Standard |
 
 The script prints all 21. The emails still say `fleetpulse` (the project's earlier name); changing
-them would break existing logins.
+them would break existing logins. For every email the password is - demo@1234
 
 ---
 
