@@ -12,6 +12,9 @@ calls, and nobody knows where a load is until it arrives. Logic Lanes fixes thos
 3. **It keeps everyone informed.** Clients track the truck live, get an arrival time, and are told at
    once when the route changes or something goes wrong.
 
+   For every mail pass use - demo@1234
+   for admin login use - admin27ubun
+
 ---
 
 ## Contents
